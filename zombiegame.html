@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+   <link rel="stylesheet" href="/basic.css">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+   </head>
+   <body class="background">
+      <!--Lägger till bakgrundsljud, loopar ljudet, gömmer ljudet och auto startar ljudet-->
+      <embed src="/sound/zombiesound.mp3" loop="true" hidden="true" autostart="true">
+      <!--Heading för att se hur mycket poäng man har under spelet, använder middle-text från basic.css. JS används för att räkna poängen.-->
+      <h1 id="pointsystem" class="middle-text"></h1>
+   
+
+      <!--Script så att man kan skriva in JS utan en JS fil-->
+      <script src="http://koda.nu/simple.js">
+         //Definerar flera variabler
+         var zombies = [];
+         var player1X = 200;
+         var player1Y = 200;
+         var player2X = 200;
+         var player2Y = 200;
+         var mouseclickX = 0;
+         var mouseclickY = 0;
+         var points = 0;
+
+         //Spawnar in zombies med hastigheten mellan 1 till 5
+         for (let i=0; i<50; i++) {
+             zombies.push({x:random(totalWidth), y:random(totalHeight), speed:random(1,5) });
+         
+         }
+
+
+         //Updaterar det som händer medans man spelar
+         function update () {
+            //Rensar gammla datan som står på skärmen
+            clearScreen();
+
+
+            //Kan inte använda fill då background överlappar med denna, tar jag bort background så kommer fill och rectangle överlappa poängen
+
+            //fill ("red")
+            //rectangle(10,10,totalWidth-10,totalHeight-10,"gray")
+
+
+
+             var i = 0;
+
+             //Sätter bild på Player 1
+             picture(player1X, player1Y, "photo/player1.png")
+
+             //Beroende på vad vilken knapp man trycker så rör spelaren sig åt olika håll
+             if (keyboard.d)
+                player1X += 10;
+             if (keyboard.a)
+                player1X -= 10;
+             if (keyboard.w)
+                player1Y -= 10;
+             if (keyboard.s)
+                player1Y += 10;
+
+            //Mellanslag för 500 poäng
+             if (keyboard.space){
+                points = points + 500
+              }
+                
+
+            
+             
+             //Sätter bild på Player 2
+             picture(player2X, player2Y, "photo/player2.png")
+
+             if (keyboard.right)
+                player2X += 10;
+             if (keyboard.left)
+                player2X -= 10;
+             if (keyboard.up)
+                player2Y -= 10;
+             if (keyboard.down)
+                player2Y += 10;
+              
+             //När man trycker på vänster mussen så sätter den kordinaterna X och Y    
+             if (mouse.left)
+                mouseclickX = mouse.x
+                mouseclickY = mouse.y
+
+
+                
+                
+
+             //Gräns till 5 zombie samtidigt
+             while (i < 5) {
+                 var zombie = zombies[i]
+                 
+                 //Lägger bild på zombiesen
+                 picture(zombie.x, zombie.y, "http://spelprogrammering.nu/bilder/zombie.png");
+
+                 //Mäter distansen från zombien och kordinaterna av musklicket
+                 const shoot = distance(zombie.x, zombie.y, mouseclickX, mouseclickY )
+
+                 //Ifall att distansen är mindre än 50 så får man 100 poäng och en zombie går bort
+                 if (shoot<50) {
+                      zombies.splice(zombies.indexOf(zombie), 1);
+                      points = points + 100
+                  }
+
+
+
+
+                 //Definerar variablerna för skildnaden mellan spelare och närmaste zombie
+                 var diff1 = player1X - zombie.x + player1Y - zombie.y;
+                 var diff2 = player2X - zombie.x + player2Y - zombie.y;
+                 
+
+
+                 //Bestämmer vem av spelaren som bir jagad
+                 if (diff2< diff1) {
+                  if (zombie.x < player2X) {
+                     zombie.x += zombie.speed;
+                  }
+                  else { zombie.x -= zombie.speed;}
+            
+                  if (zombie.y < player2Y)
+                     zombie.y += zombie.speed;
+                        
+                  else { zombie.y -= zombie.speed;}
+                 } 
+                 else {
+                  if (zombie.x < player1X) {
+                     zombie.x += zombie.speed;
+                    }
+                 else { zombie.x -= zombie.speed;}
+         
+                 if (zombie.y < player1Y)
+                     zombie.y += zombie.speed;
+                     
+                 else { zombie.y -= zombie.speed;}
+
+                 }
+                 
+                     
+
+                 //Definerar variablerna för distansen mellan spelar och zombie
+                 var play1 = distance(zombie.x, zombie.y, player1X, player1Y )
+                 var play2 = distance(zombie.x, zombie.y, player2X, player2Y )
+
+                 
+
+                 //Gör så att man kan använda JS variabler i HTML
+                 document.getElementById("pointsystem").innerHTML = points;
+
+                 //If-sats för att vinna, kräver 1000 poäng. Återställer poängen till 0 och du får notis
+                 if (points == 1000){
+                    alert("Grattis, du klarade spelet! Tryck F5 för att köra om!")
+                    stopUpdate();
+                    points = 0;
+                 }
+
+                 //If-sats för att förlora, ifall att distansen av någon av spelarna är mindre än 5 så avslutas det och återställs
+                 if (play1 < 5 || play2 < 5)
+                 {
+                     alert("Du dog, F5 för att starta igen! ")
+                     stopUpdate();
+                     points = 0;
+                 }
+                 i+=1
+
+               
+
+             }
+            
+         }
+         
+      </script>
+   </body>
+</html>

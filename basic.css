@@ -1,0 +1,33 @@
+/*Ändrar texten till centrerad och fet stil*/
+.middle-text {
+    text-align: center;
+    font-weight: bold;
+    
+}
+/*Ändrar backgrundsfärgen*/
+.background {
+    background-color: red;
+    
+}
+
+/*Container för grundläggande flexbox*/
+.container {
+    display: flex;
+    justify-content:space-evenly;
+}
+/*Item för header, de röda rektanglarna*/
+.item {
+    flex-grow: 1;
+    height: 100px;
+    justify-content:space-between;
+    color:black;
+    font-weight: bolder;
+    background-color:gray;
+    text-align: center;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 35px;
+    margin: 5px;
+    border: 5px solid black;
+    border-radius: 5px;
+}
